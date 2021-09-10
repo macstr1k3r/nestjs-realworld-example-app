@@ -8,9 +8,13 @@
     "start:watch": "nodemon",
     "prestart:prod": "tsc",
     "start:prod": "node dist/main.js",
+    "docker":"docker-compose up",
+    "import-data":"ts-node src/data-importer/import-data.ts",
     "test": "jest --config=jest.json",
     "test:watch": "jest --watch --config=jest.json",
-    "test:coverage": "jest --config=jest.json --coverage --coverageDirectory=coverage"
+    "test:coverage": "jest --config=jest.json --coverage --coverageDirectory=coverage",
+    "test:perf": "echo 'Pretending to be running performance tests'",
+    "test:integrated": "echo 'Pretending to be running integrated tests'"
   },
   "repository": {
     "type": "git",
@@ -39,6 +43,7 @@
     "jsonwebtoken": "^8.5.1",
     "mysql": "^2.18.1",
     "passport-jwt": "^4.0.0",
+    "pg": "^8.7.1",
     "reflect-metadata": "^0.1.13",
     "rxjs": "^6.5.5",
     "slug": "^1.1.0",

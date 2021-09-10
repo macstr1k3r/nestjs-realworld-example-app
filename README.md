@@ -1,138 +1,32 @@
-# ![Node/Express/Mongoose Example App](project-logo.png)
-
-[![Build Status](https://travis-ci.org/anishkny/node-express-realworld-example-app.svg?branch=master)](https://travis-ci.org/anishkny/node-express-realworld-example-app)
-
-> ### NestJS codebase containing real world examples (CRUD, auth, advanced patterns, etc) that adheres to the [RealWorld](https://github.com/gothinkster/realworld-example-apps) API spec.
-
-
+## NestJS real world example app, extended with CI/CD, IaC and more.
 ----------
-
-# Getting started
-
-## Installation
-
-Clone the repository
-
-    git clone https://github.com/lujakob/nestjs-realworld-example-app.git
-
-Switch to the repo folder
-
-    cd nestjs-realworld-example-app
-    
-Install dependencies
-    
-    npm install
-
-Copy config file and set JsonWebToken secret key
-
-    cp src/config.ts.example src/config.ts
-    
-----------
-
-## Database
-
-The codebase contains examples of two different database abstractions, namely [TypeORM](http://typeorm.io/) and [Prisma](https://www.prisma.io/). 
-    
-The branch `master` implements TypeORM with a mySQL database.
-
-The branch `prisma` implements Prisma with a mySQL database.
-
-----------
-
-##### TypeORM
-
-----------
-
-Create a new mysql database with the name `nestjsrealworld`\
-(or the name you specified in the ormconfig.json)
-
-Copy TypeORM config example file for database settings
-
-    cp ormconfig.json.example
-    
-Set mysql database settings in ormconfig.json
-
-    {
-      "type": "mysql",
-      "host": "localhost",
-      "port": 3306,
-      "username": "your-mysql-username",
-      "password": "your-mysql-password",
-      "database": "nestjsrealworld",
-      "entities": ["src/**/**.entity{.ts,.js}"],
-      "synchronize": true
-    }
-    
-Start local mysql server and create new database 'nestjsrealworld'
-
-On application start, tables for all entities will be created.
-
-----------
-
-##### Prisma
-
-----------
-
-To run the example with Prisma checkout branch `prisma`, remove the node_modules and run `npm install`
-
-Create a new mysql database with the name `nestjsrealworld-prisma` (or the name you specified in `prisma/.env`)
-
-Copy prisma config example file for database settings
-
-    cp prisma/.env.example prisma/.env
-
-Set mysql database settings in prisma/.env
-
-    DATABASE_URL="mysql://USER:PASSWORD@HOST:PORT/DATABASE"
-
-To create all tables in the new database make the database migration from the prisma schema defined in prisma/schema.prisma
-
-    npx prisma migrate save --experimental
-    npx prisma migrate up --experimental
-
-Now generate the prisma client from the migrated database with the following command
-
-    npx prisma generate
-
-The database tables are now set up and the prisma client is generated. For more information see the docs:
-
-- https://www.prisma.io/docs/getting-started/setup-prisma/add-to-existing-project-typescript-mysql
+[Repository URL](https://github.com/macstr1k3r/nestjs-realworld-example-app).
 
 
-----------
+Due to a time constraint of 4 hours, some of the modifications are up to a POC, rather than a production ready level.
 
-## NPM scripts
+The original example application has been adapted to use `PostgreSQL`
 
-- `npm start` - Start application
-- `npm run start:watch` - Start application in watch mode
-- `npm run test` - run Jest test runner 
-- `npm run start:prod` - Build application
+---
+A docker compose file has been created to facilitate local development.
+For local development `yarn docker` should provide a working local dev environment including hot reloading. As configured currently, The application will be available at `http://localhost:2000/`
 
-----------
+---
+Configuration management has intentionally been left out in favour of time.
+A viable approach would be to inject the required configuration and secrets at runtime using `AWS Secrets Manager` or `AWS Parameter Store` as environment variables, and have a proper governance process around those.
 
-## API Specification
+The fact that the `.env` file contains some credentials is a non-issue since those are used only for running the local environment.
 
-This application adheres to the api specifications set by the [Thinkster](https://github.com/gothinkster) team. This helps mix and match any backend with any other frontend without conflicts.
+Variables prefixed with `NRW_` are by convention used by the application at runtime an should be provided respectively.
 
-> [Full API Spec](https://github.com/gothinkster/realworld/tree/master/api)
+---- 
+`CI/CD` is implemented using Github Actions. To learn more see `.github/workflows/README.md`
 
-More information regarding the project can be found here https://github.com/gothinkster/realworld
+---
+`AWS` has been chosen as the cloud provider to deploy the application to. То learn more see `terraform/README.md`
 
-----------
+---
+Stub `data importing` has been written at a **POC** level. Running `yarn import-data` will execute the correct code(`src/data-importer/`). The structure is such that existing database configuration and entity definitions are reused, ensuring correct entries however integration of the data importers into the local dev environment has been intentionally left out due to time constraints. If we were to seek to implement this, a small container that would execute `yarn import-data`, running before the app and after the database would be required.
 
-## Start application
-
-- `npm start`
-- Test api with `http://localhost:3000/api/articles` in your favourite browser
-
-----------
-
-# Authentication
- 
-This applications uses JSON Web Token (JWT) to handle authentication. The token is passed with each request using the `Authorization` header with `Token` scheme. The JWT authentication middleware handles the validation and authentication of the token. Please check the following sources to learn more about JWT.
-
-----------
- 
-# Swagger API docs
-
-This example repo uses the NestJS swagger module for API documentation. [NestJS Swagger](https://github.com/nestjs/swagger) - [www.swagger.io](https://swagger.io/)        
+---
+`Performance testing` was de-scoped in favor of time. `k6` should be considered for a proper implementation.

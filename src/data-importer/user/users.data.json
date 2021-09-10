@@ -1,0 +1,12 @@
+[
+        {
+                "id": 1,
+                "articles": [],
+                "favorites": [],
+                "bio": "dsadasdasdas",
+                "email": "fake-email@yopmail.com",
+                "image": "url-to-image",
+                "password": "veryStrongPassword",
+                "username": "username"
+        }
+]

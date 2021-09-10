@@ -11,6 +11,8 @@
     "target": "es6",
     "sourceMap": true,
     "allowJs": true,
+    "resolveJsonModule": true,
+    "esModuleInterop": true,
     "outDir": "./dist"
   },
     "include": [

@@ -1,0 +1,55 @@
+
+name: CI NestJs Real world
+on: pull_request
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    environment: staging
+    env:
+      AWS_ACCOUNT_ID: '${{ secrets.NRW_AWS_ACCOUNT_ID }}'
+      AWS_ACCESS_KEY_ID: '${{ secrets.AWS_ACCESS_KEY_ID }}'
+      AWS_SECRET_ACCESS_KEY: '${{ secrets.AWS_SECRET_ACCESS_KEY }}'
+      GIT_SHORT_SHA: ${GITHUB_SHA::8}
+      AWS_EC2_METADATA_DISABLED: true
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v2
+        with:
+          node-version: 14
+      - name: Build Push Artifact
+        run: ./scripts/ci/build-push-artifact.sh 
+  
+  integrated-tests:
+    runs-on: ubuntu-latest
+    environment: integrated-tests
+    env:
+      AWS_ACCOUNT_ID: '${{ secrets.NRW_AWS_ACCOUNT_ID }}'
+      AWS_ACCESS_KEY_ID: '${{ secrets.AWS_ACCESS_KEY_ID }}'
+      AWS_SECRET_ACCESS_KEY: '${{ secrets.AWS_SECRET_ACCESS_KEY }}'
+      AWS_EC2_METADATA_DISABLED: true
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v2
+        with:
+          node-version: 14
+      - run: echo "Spin up integrated tests environment"
+      - run: yarn test:integrated
+      - run: echo "Spin down integrated tests environment"
+
+  perf-tests:
+    runs-on: ubuntu-latest
+    environment: perf-tests
+    env:
+      AWS_ACCOUNT_ID: '${{ secrets.NRW_AWS_ACCOUNT_ID }}'
+      AWS_ACCESS_KEY_ID: '${{ secrets.AWS_ACCESS_KEY_ID }}'
+      AWS_SECRET_ACCESS_KEY: '${{ secrets.AWS_SECRET_ACCESS_KEY }}'
+      AWS_EC2_METADATA_DISABLED: true
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v2
+        with:
+          node-version: 14
+      - run: echo "Spin up performance testing environment"
+      - run: yarn test:perf
+      - run: echo "Spin down performance environment"

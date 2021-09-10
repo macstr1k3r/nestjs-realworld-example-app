@@ -1,0 +1,40 @@
+
+
+services:
+  nestjsrealworld:
+    container_name: nestjsrealworld
+    build:
+      context: .
+      dockerfile: Dockerfile 
+      target: development
+    ports:
+      - ${NRW_APP_PORT}:${NRW_APP_PORT}
+    env_file:
+      - development.env
+      - .env
+    networks:
+      - service_network
+    depends_on:
+      - postgresql
+    volumes:
+      - .:/app
+      - /app/node_modules
+    command: yarn start:watch
+  
+  postgresql:
+    container_name: postgresql
+    image: postgres:12
+    networks:
+      - service_network
+    environment:
+     
+      PG_DATA: /var/lib/postgresql/data
+    ports:
+      - 5432:5432
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+volumes:
+  pgdata:
+networks:
+  service_network:
