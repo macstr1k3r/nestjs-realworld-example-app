@@ -16,10 +16,10 @@ node_modules
 
 #config files
 ormconfig.json
-src/config.ts
 
 # code testing coverage
 coverage
 
 
 dist/*
+.terraform
